@@ -6,7 +6,7 @@ import Confetti from "react-confetti"
 export default function App() {
 	const [dice, setDice] = useState(() => generateAllNewDice())
 	const [amountOfRerolls, setAmountOfRerolls] = useState(0)
-	const [highScore, setHighScore] = useState(localStorage.getItem("highScore"))
+	const [highScore, setHighScore] = useState(() => getHighScore())
 	const [newHighScore, setNewHighScore] = useState(false)
 	const gameWon = checkIfGameWon()
 	const buttonRef = useRef(null)
@@ -16,6 +16,15 @@ export default function App() {
 			return true
 		}
 		return false
+	}
+
+	function getHighScore() {
+		const highScore = localStorage.getItem("highScore")
+		if (highScore === null) {
+			return 100
+		} else {
+			return highScore
+		}
 	}
 
 	useEffect(() => {
@@ -68,7 +77,8 @@ export default function App() {
 			{gameWon && <Confetti />}
 			<h1 className="text-2xl font-bold">Tenzies</h1>
 			<p className="mx-5 text-center">
-				Roll until all dice are the same. Click each die to freeze it at its current value between rolls.
+				Roll until all dice are the same. Click each die to freeze it at its current value between rolls. Lowest amount
+				of rerolls wins!
 			</p>
 			<div className="grid grid-cols-5 grid-rows-2 gap-3">{diceElements}</div>
 			<button
